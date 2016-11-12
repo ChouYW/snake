@@ -1,0 +1,67 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>扫雷</title>
+		<style type="text/css">
+		td{width: 60px; height: 60px;border: black 1px solid; background-color: #009688; cursor: pointer;}
+		</style>
+		<script>
+		var bombs = new Array();
+		var bricks = new Array();
+
+		window.onload = function (){
+			var view = document.getElementById('view');
+			for(var i = 0;i < 9;i++){
+				bricks[i] = new Array();
+				var col = document.createElement("tr");
+				for(var j = 0;j < 9;j++){
+					var row = document.createElement("td");
+					bricks[i][j] = col.appendChild(row);
+					bricks[i][j].setAttribute("onclick", "mine("+ i +","+ j +")");
+					// bricks[i][j].onclick = function (){
+					// 	test(1,1);
+					// }
+				}
+				view.appendChild(col);
+			}
+			getBomb(bricks);
+			// console.log(bricks);
+		}
+
+		function mine(i,j){
+			alert(i+" ss "+j);
+		}
+
+		function getBomb(bricks){
+			var temp = new Array();
+			for(var i = 0; i < (bricks.length * bricks.length); i++ ){
+				temp[i] = i+1;
+			}
+			//生成随机数
+			for(var i = 0; i < 10; i++){
+				var bomb
+
+				do{
+					bomb = parseInt(Math.random()*temp.length);
+				}while(temp[bomb-1] == null);
+
+				temp[bomb-1] = null;
+				bombs[i] = bomb;
+				//将选择方块设为炸弹
+				j = parseInt(bomb/9);
+				k = parseInt(bomb-1)%9;
+				bricks[j][k].isBomb = true;	
+			}
+			console.log(bombs);
+		}
+		</script>
+	</head>
+
+	<body>
+		<div style="width:540; margin:0 auto; background:#CC9;">
+			<table>
+				<tbody id="view"></tbody>
+			</table>
+		</div>
+	</body>
+</html>
