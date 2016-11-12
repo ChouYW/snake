@@ -1,67 +1,95 @@
 <html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title>扫雷</title>
-		<style type="text/css">
-		td{width: 60px; height: 60px;border: black 1px solid; background-color: #009688; cursor: pointer;}
-		</style>
-		<script>
-		var bombs = new Array();
-		var bricks = new Array();
+  <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>扫雷</title>
 
-		window.onload = function (){
-			var view = document.getElementById('view');
-			for(var i = 0;i < 9;i++){
-				bricks[i] = new Array();
-				var col = document.createElement("tr");
-				for(var j = 0;j < 9;j++){
-					var row = document.createElement("td");
-					bricks[i][j] = col.appendChild(row);
-					bricks[i][j].setAttribute("onclick", "mine("+ i +","+ j +")");
-					// bricks[i][j].onclick = function (){
-					// 	test(1,1);
-					// }
-				}
-				view.appendChild(col);
+	<style type="text/css">
+	  td{width: 60px; height: 60px;border: black 1px solid; background-color: #009688; cursor: pointer;}
+	</style>
+
+	<script>
+	var bombs = new Array();
+	var bricks = new Array();
+
+	window.onload = function (){
+		var view = document.getElementById('view');
+		for(var i = 0;i < 9;i++){
+			bricks[i] = new Array();
+			var col = document.createElement("tr");
+			for(var j = 0;j < 9;j++){
+				var row = document.createElement("td");
+				bricks[i][j] = col.appendChild(row);
+				bricks[i][j].setAttribute("onclick", "mine("+ i +","+ j +")");
 			}
-			getBomb(bricks);
-			// console.log(bricks);
+			view.appendChild(col);
 		}
+		getBomb(bricks);
+	}
 
-		function mine(i,j){
-			alert(i+" ss "+j);
-		}
-
-		function getBomb(bricks){
-			var temp = new Array();
-			for(var i = 0; i < (bricks.length * bricks.length); i++ ){
-				temp[i] = i+1;
+	function mine(i,j){
+		if(bricks[i][j].isBomb != true){
+			if(withoutBomb(i-1,j-1)){
+				alert("test");
 			}
-			//生成随机数
-			for(var i = 0; i < 10; i++){
-				var bomb
-
-				do{
-					bomb = parseInt(Math.random()*temp.length);
-				}while(temp[bomb-1] == null);
-
-				temp[bomb-1] = null;
-				bombs[i] = bomb;
-				//将选择方块设为炸弹
-				j = parseInt(bomb/9);
-				k = parseInt(bomb-1)%9;
-				bricks[j][k].isBomb = true;	
-			}
-			console.log(bombs);
 		}
-		</script>
-	</head>
+	}
 
-	<body>
-		<div style="width:540; margin:0 auto; background:#CC9;">
-			<table>
-				<tbody id="view"></tbody>
-			</table>
-		</div>
-	</body>
+	function getBomb(bricks){
+		var temp = new Array();
+		for(var i = 0; i < (bricks.length * bricks.length); i++ ){
+			temp[i] = i+1;
+		}
+		//生成随机数
+		for(var i = 0; i < 10; i++){
+			var bomb
+
+			do{
+				bomb = parseInt(Math.random()*temp.length);
+			}while(temp[bomb-1] == null);
+
+			temp[bomb-1] = null;
+			bombs[i] = bomb;
+			//将选择方块设为炸弹
+			j = parseInt(bomb/9);
+			k = parseInt(bomb-1)%9;
+			console.log(bomb+ "," + j + "," +k)
+			bricks[j][k].isBomb = true;	
+			bricks[j][k].style.backgroundColor = "#ffeb00";
+		}
+		console.log(bombs);
+		console.log(bricks);
+	}
+
+	function withoutBomb(i,j){
+		if(bricks[i][j].isBomb == true) return false;
+		if(i>0 && j>0 && bricks[i-1][j-1].isBomb == true) return false;
+		if(i>0 && j<8 && bricks[i-1][j+1].isBomb == true) return false;
+		if(i<8 && j<8 && bricks[i+1][j+1].isBomb == true) return false;
+		if(i<8 && j>0 && bricks[i+1][j-1].isBomb == true) return false;
+		if(i>0 && bricks[i-1][j].isBomb == true) return false;
+		if(j<8 && bricks[i][j+1].isBomb == true) return false;
+		if(i<8 && bricks[i+1][j].isBomb == true) return false;
+		if(j>0 && bricks[i][j-1].isBomb == true) return false;
+
+		bricks[i][j].isBomb.style.backgroundColor = "#ffffff";
+		if(i>0 && j>0) bricks[i-1][j-1].style.backgroundColor = "#ffffff";
+		if(i>0 && j<8) bricks[i-1][j+1].style.backgroundColor = "#ffffff";
+		if(i<8 && j<8) bricks[i+1][j+1].style.backgroundColor = "#ffffff";
+		if(i<8 && j>0) bricks[i+1][j-1].style.backgroundColor = "#ffffff";
+		if(i>0) bricks[i-1][j].style.backgroundColor = "#ffffff";
+		if(j<8) bricks[i][j+1].style.backgroundColor = "#ffffff";
+		if(i<8) bricks[i+1][j].style.backgroundColor = "#ffffff";
+		if(j>0) bricks[i][j-1].style.backgroundColor = "#ffffff";
+		return true;
+	}
+	</script>
+  </head>
+
+  <body>
+	<div style="width:540; margin:0 auto; background:#CC9;">
+	  <table>
+		<tbody id="view"></tbody>
+	  </table>
+	</div>
+  </body>
 </html>
